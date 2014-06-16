@@ -1,42 +1,67 @@
 <!DOCTYPE html>
-<!--[if lt IE 7]>	  <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
-<!--[if IE 7]>		 <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
-<!--[if IE 8]>		 <html class="no-js lt-ie9"> <![endif]-->
-<!--[if gt IE 8]><!--> <html> <!--<![endif]-->
-	<head>
-		<meta charset="utf-8">
-		<meta http-equiv="X-UA-Compatible" content="IE=edge">
-		<title></title>
-		<meta name="description" content="">
-		<meta name="viewport" content="width=device-width, initial-scale=1">	
+<!--[if lt IE 7]><html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]><html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]><html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--><html> <!--<![endif]-->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title></title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-		<link rel="stylesheet" href="css/normalize.css">
-		<link rel="stylesheet" href="css/foundation.min.css" />
-		<script src="js/vendor/modernizr-2.6.2.min.js"></script>
-	</head>
-	<body>
-		<div class="row">
-			<div class="large-12 columns">
-				<h1>Eurovision Song Contest Results</h1>
-				<h2>1956 - 2014</h2>
-			</div>
-		</div>
-		<div class="row">
-			<div class="large-1 columns">
-				<h3>Year</h3>
-			</div>
-			<div class="large-11 columns">
-				<div class="range-slider" data-slider>
-					<span class="range-slider-handle"></span>
-					<span class="range-slider-active-segment"></span>
-					<input type="hidden">
-				</div>
-			</div>
-		</div>
-		<script src="js/vendor/jquery-1.10.2.min.js"></script>
-		<script src="js/foundation.min.js"></script>
-		<script>
-		  $(document).foundation();
-		</script>
-	</body>
+    <link rel="stylesheet" href="css/normalize.css">
+    <link rel="stylesheet" href="css/foundation.min.css"/>
+    <script src="js/vendor/modernizr-2.6.2.min.js"></script>
+    <script src="js/vendor/jquery-1.10.2.min.js"></script>
+</head>
+<body>
+<script>
+    function getResultsData(url) {
+        var req = new XMLHttpRequest();
+        req.open("GET", url, true);
+        req.setRequestHeader("Content-type", "application/json");
+
+        req.onreadystatechange = function () {
+            if (req.readyState == 4 && req.status == 200) {
+                var results = JSON.parse(req.responseText);
+            }
+        };
+
+        req.send();
+    }
+
+    getResultsData('data/results.json');
+</script>
+
+<div class="row">
+
+    <div class="large-12 columns">
+        <div class="panel">
+            <h1>Eurovision Song Contest Results</h1>
+
+            <h2>1956 - 2014</h2>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="large-12 columns">
+        <div class="large-1 medium-1 columns">
+            <h3>Year</h3>
+        </div>
+        <div class="large-11 medium-11 columns">
+            <div class="range-slider" data-slider>
+                <span class="range-slider-handle"></span>
+                <span class="range-slider-active-segment"></span>
+                <input type="hidden">
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="js/foundation.min.js"></script>
+<script>
+    $(document).foundation();
+</script>
+</body>
 </html>
