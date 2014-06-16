@@ -25,32 +25,37 @@
         req.onreadystatechange = function () {
             if (req.readyState == 4 && req.status == 200) {
                 var results = JSON.parse(req.responseText);
+
+                // Extract the first and last event years and create a subtitle containing them
+			    first_year = new Date(results[0]['date']);
+			    last_year = new Date(results[results.length - 1]['date']);
+			    $("#header").append("<h2>" + first_year.getFullYear() + " - " + last_year.getFullYear() +"</h2>");
+
+			    // Set the slider max and min values to years
+			    $("#year-slider").attr("data-options", "start: " + first_year.getFullYear() + "; end: " + last_year.getFullYear() + ";");
+			    $('#year-slider').foundation('slider', 'set_value', last_year.getFullYear());
             }
         };
 
         req.send();
     }
-
-    getResultsData('data/results.json');
 </script>
 
 <div class="row">
 
     <div class="large-12 columns">
-        <div class="panel">
+        <div id="header" class="panel">
             <h1>Eurovision Song Contest Results</h1>
-
-            <h2>1956 - 2014</h2>
         </div>
     </div>
 </div>
 <div class="row">
     <div class="large-12 columns">
         <div class="large-1 medium-1 columns">
-            <h3>Year</h3>
+            <h3 id="year-caption">Year</h3>
         </div>
         <div class="large-11 medium-11 columns">
-            <div class="range-slider" data-slider>
+            <div id="year-slider" class="range-slider" data-slider>
                 <span class="range-slider-handle"></span>
                 <span class="range-slider-active-segment"></span>
                 <input type="hidden">
@@ -62,6 +67,12 @@
 <script src="js/foundation.min.js"></script>
 <script>
     $(document).foundation();
+
+	$('[data-slider]').on('change', function(){
+		$("#year-caption").text($('#year-slider').attr('data-slider'));
+	});
+
+	getResultsData('data/results.json');
 </script>
 </body>
 </html>
