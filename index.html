@@ -17,6 +17,8 @@
 </head>
 <body>
 <script>
+	var results = null;
+
     function getResultsData(url) {
         var req = new XMLHttpRequest();
         req.open("GET", url, true);
@@ -24,11 +26,11 @@
 
         req.onreadystatechange = function () {
             if (req.readyState == 4 && req.status == 200) {
-                var results = JSON.parse(req.responseText);
+                results = JSON.parse(req.responseText);
 
                 // Extract the first and last event years and create a subtitle containing them
-			    first_year = new Date(results[0]['date']);
-			    last_year = new Date(results[results.length - 1]['date']);
+			    first_year = new Date(results["1956"]['date']);
+			    last_year = new Date(results["2014"]['date']);
 			    $("#header").append("<h2>" + first_year.getFullYear() + " - " + last_year.getFullYear() +"</h2>");
 
 			    // Set the slider max and min values to years
@@ -63,16 +65,21 @@
         </div>
     </div>
 </div>
+<div class="row">
+    <div id="main-content" class="large-12 columns">
+    </div>
+</div>
 
 <script src="js/foundation.min.js"></script>
 <script>
     $(document).foundation();
 
+	getResultsData('data/results.json');
+
 	$('[data-slider]').on('change', function(){
 		$("#year-caption").text($('#year-slider').attr('data-slider'));
+		$("#main-content").text(JSON.stringify(results[$('#year-slider').attr('data-slider')]));
 	});
-
-	getResultsData('data/results.json');
 </script>
 </body>
 </html>
