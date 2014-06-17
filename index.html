@@ -83,8 +83,13 @@
 
         $("#results-table").empty();
 
-        // Loop through every country and make a row for participants
+        $("#results-table").append("<thead><tr id=\"results-header\"><th>Performers</th></tr></thead>");
+
         $.each(results[$('#year-slider').attr('data-slider')]['participants'], function(key, value){
+            // Add a cell in the thead for the country
+            $("#results-header").append("<th>" + key.charAt(0) + "</th>");
+
+            // If they're performing then add their row
             if (value['performing'] == true) {
                 $("#results-table").append("<tr><td>" + key + "</td></tr>");
             }
