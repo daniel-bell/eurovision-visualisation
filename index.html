@@ -67,6 +67,8 @@
 </div>
 <div class="row">
     <div id="main-content" class="large-12 columns">
+        <table id="results-table">
+        </table>
     </div>
 </div>
 
@@ -78,7 +80,15 @@
 
 	$('[data-slider]').on('change', function(){
 		$("#year-caption").text($('#year-slider').attr('data-slider'));
-		$("#main-content").text(JSON.stringify(results[$('#year-slider').attr('data-slider')]));
+
+        $("#results-table").empty();
+
+        // Loop through every country and make a row for participants
+        $.each(results[$('#year-slider').attr('data-slider')]['participants'], function(key, value){
+            if (value['performing'] == true) {
+                $("#results-table").append("<tr><td>" + key + "</td></tr>");
+            }
+        });
 	});
 </script>
 </body>
