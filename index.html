@@ -89,19 +89,24 @@
 
             // If they're performing then add their row
             if (value['performing'] == true) {
-                $("#results-table").append("<tr><td>" + countries[key] + "</td></tr>");
+                $("#results-table").append("<tr id=\"" + key + "-row\"><td>" + countries[key] + "</td></tr>");
                 rowCountry = key;
 
                 // Create a new column for each other participant
                 $.each(results[$('#year-slider').attr('data-slider')]['participants'], function(key, value){
-
-                    if (currentCountryData['votes'][key] != undefined) {
-                        points = currentCountryData['votes'][key]['points']
+                    if (key != rowCountry){
+                        if (currentCountryData['votes'][key] != undefined) {
+                            points = currentCountryData['votes'][key]
+                        }
+                        else {
+                            points = "0"
+                        }
                     }
-                    else{
+                    else {
                         points = "-"
                     }
-                    $("#" + rowCountry.toLowerCase() + "-row").append("<td>" + points + "</td>");
+
+                    $("#" + rowCountry + "-row").append("<td>" + points + "</td>");
                 });
             }
         });
