@@ -18,33 +18,28 @@
 <body>
 <script>
 	var results = null;
+    var countries = null;
 
-    function getResultsData(url) {
-        var req = new XMLHttpRequest();
-        req.open("GET", url, true);
-        req.setRequestHeader("Content-type", "application/json");
+    function getResultsData(results_url, countries_url) {
+        $.getJSON(results_url, function(results_json) {
+                results = results_json;
+                // Retrieve country code mappings
+                $.getJSON(countries_url, function(countries_json){
+                    countries = countries_json;
+                    // Extract the first and last event years and create a subtitle containing them
+                    first_year = new Date(results["1956"]['date']);
+                    last_year = new Date(results["2014"]['date']);
+                    $("#header").append("<h2>" + first_year.getFullYear() + " - " + last_year.getFullYear() +"</h2>");
 
-        req.onreadystatechange = function () {
-            if (req.readyState == 4 && req.status == 200) {
-                results = JSON.parse(req.responseText);
-
-                // Extract the first and last event years and create a subtitle containing them
-			    first_year = new Date(results["1956"]['date']);
-			    last_year = new Date(results["2014"]['date']);
-			    $("#header").append("<h2>" + first_year.getFullYear() + " - " + last_year.getFullYear() +"</h2>");
-
-			    // Set the slider max and min values to years
-			    $("#year-slider").attr("data-options", "start: " + first_year.getFullYear() + "; end: " + last_year.getFullYear() + ";");
-			    $('#year-slider').foundation('slider', 'set_value', last_year.getFullYear());
-            }
-        };
-
-        req.send();
+                    // Set the slider max and min values to years
+                    $("#year-slider").attr("data-options", "start: " + first_year.getFullYear() + "; end: " + last_year.getFullYear() + ";");
+                    $('#year-slider').foundation('slider', 'set_value', last_year.getFullYear());
+                });
+        });
     }
 </script>
 
 <div class="row">
-
     <div class="large-12 columns">
         <div id="header" class="panel">
             <h1>Eurovision Song Contest Results</h1>
@@ -76,7 +71,7 @@
 <script>
     $(document).foundation();
 
-	getResultsData('data/results.json');
+	getResultsData("data/results.json", "data/countries.json");
 
 	$('[data-slider]').on('change', function(){
 		$("#year-caption").text($('#year-slider').attr('data-slider'));
@@ -86,12 +81,28 @@
         $("#results-table").append("<thead><tr id=\"results-header\"><th>Performers</th></tr></thead>");
 
         $.each(results[$('#year-slider').attr('data-slider')]['participants'], function(key, value){
+            currentCountryData = value;
+            $("main-content").append(JSON.stringify(currentCountryData));
+
             // Add a cell in the thead for the country
-            $("#results-header").append("<th>" + key.charAt(0) + "</th>");
+            $("#results-header").append("<th><img src=\"img/flags/" + key + ".png\" alt=\"" + countries[key] + "\"></th>");
 
             // If they're performing then add their row
             if (value['performing'] == true) {
-                $("#results-table").append("<tr><td>" + key + "</td></tr>");
+                $("#results-table").append("<tr><td>" + countries[key] + "</td></tr>");
+                rowCountry = key;
+
+                // Create a new column for each other participant
+                $.each(results[$('#year-slider').attr('data-slider')]['participants'], function(key, value){
+
+                    if (currentCountryData['votes'][key] != undefined) {
+                        points = currentCountryData['votes'][key]['points']
+                    }
+                    else{
+                        points = "-"
+                    }
+                    $("#" + rowCountry.toLowerCase() + "-row").append("<td>" + points + "</td>");
+                });
             }
         });
 	});
