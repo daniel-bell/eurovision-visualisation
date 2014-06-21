@@ -93,6 +93,7 @@
                 rowCountry = key;
 
                 // Create a new column for each other participant
+                rowString = "";
                 $.each(results[$('#year-slider').attr('data-slider')]['participants'], function(key, value){
                     if (key != rowCountry){
                         if (currentCountryData['votes'][key] != undefined) {
@@ -105,9 +106,9 @@
                     else {
                         points = "-"
                     }
-
-                    $("#" + rowCountry + "-row").append("<td>" + points + "</td>");
+                    rowString += "<td>" + points + "</td>";
                 });
+                $("#" + rowCountry + "-row").append(rowString);
             }
         });
 	});
